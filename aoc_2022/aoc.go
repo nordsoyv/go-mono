@@ -7,7 +7,6 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello AOC")
 	argLength := len(os.Args)
 	if argLength == 1 {
 		fmt.Println("No argument given. Needs name of day given. Aborting.")
@@ -15,14 +14,23 @@ func main() {
 	}
 	//programName := os.Args[0]
 	day := os.Args[1]
-	fmt.Printf("day: %v\n", day)
-	if day == "01atest" {
+	switch day {
+	case "01atest":
 		days.Day01TestA()
-	} else if day == "01btest" {
+	case "01btest":
 		days.Day01TestB()
-	} else if day == "01a" {
+	case "01a":
 		days.Day01A()
-	} else if day == "01b" {
+	case "01b":
 		days.Day01B()
+	case "02atest":
+		days.Day02TestA()
+	case "02btest":
+		days.Day02TestB()
+	case "02a":
+		days.Day02A()
+	case "02b":
+		days.Day02B()
 	}
+
 }
