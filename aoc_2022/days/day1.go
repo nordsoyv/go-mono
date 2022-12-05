@@ -1,9 +1,8 @@
 package days
 
 import (
-	"bufio"
+	"aoc_2022/common"
 	"fmt"
-	"os"
 	"sort"
 	"strconv"
 )
@@ -45,7 +44,7 @@ func Day01TestB() {
 }
 
 func parseElves(path string) []Elf {
-	lines := readFileToLines(path)
+	lines := common.ReadFileToLines(path)
 	elves := []Elf{}
 	currentElf := Elf{}
 	for _, line := range lines {
@@ -81,20 +80,4 @@ func findTop3ElvesFood(path string) int {
 	sort.Ints(foodAmounts)
 	length := len(foodAmounts)
 	return foodAmounts[length-1] + foodAmounts[length-2] + foodAmounts[length-3]
-}
-
-func readFileToLines(path string) []string {
-	var file, err = os.OpenFile(path, os.O_RDONLY, 0644)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-	fileScanner := bufio.NewScanner(file)
-
-	fileScanner.Split(bufio.ScanLines)
-	var fileLines []string
-	for fileScanner.Scan() {
-		fileLines = append(fileLines, fileScanner.Text())
-	}
-	return fileLines
 }
