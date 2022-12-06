@@ -14,31 +14,5 @@ func main() {
 	}
 	//programName := os.Args[0]
 	day := os.Args[1]
-	switch day {
-	case "01atest":
-		days.Day01TestA()
-	case "01btest":
-		days.Day01TestB()
-	case "01a":
-		days.Day01A()
-	case "01b":
-		days.Day01B()
-	case "02atest":
-		days.Day02TestA()
-	case "02btest":
-		days.Day02TestB()
-	case "02a":
-		days.Day02A()
-	case "02b":
-		days.Day02B()
-	case "03atest":
-		days.Day03TestA()
-	case "03btest":
-		days.Day03TestB()
-	case "03a":
-		days.Day03A()
-	case "03b":
-		days.Day03B()
-	}
-
+	days.RunTask(day)
 }

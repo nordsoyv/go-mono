@@ -9,30 +9,30 @@ import (
 
 func Day03A() {
 	println("Day 03 A")
-	sum := evalA("./res/day3.txt")
+	sum := evalDay3A("./res/day3.txt")
 	fmt.Println("Sum priority is ", sum, " Should be 8139")
 
 }
 
 func Day03B() {
 	println("Day 03 B")
-	sum := evalB("./res/day3.txt")
+	sum := evalDay3B("./res/day3.txt")
 	fmt.Println("Sum priority is ", sum, " Should be 2668")
 }
 
 func Day03TestA() {
 	println("Day 03 test A")
-	sum := evalA("./res/day3test.txt")
+	sum := evalDay3A("./res/day3test.txt")
 	fmt.Println("Sum priority is ", sum, " Should be 157")
 }
 
 func Day03TestB() {
 	println("Day 03 test B")
-	sum := evalB("./res/day3test.txt")
+	sum := evalDay3B("./res/day3test.txt")
 	fmt.Println("Sum priority is ", sum, " Should be 70")
 }
 
-func evalA(path string) int {
+func evalDay3A(path string) int {
 	lines := common.ReadFileToLines(path)
 	sumPriority := 0
 	for _, line := range lines {
@@ -49,7 +49,7 @@ func evalA(path string) int {
 	return sumPriority
 }
 
-func evalB(path string) int {
+func evalDay3B(path string) int {
 	lines := common.ReadFileToLines(path)
 	elfTrios := chunkSlice(lines, 3)
 	fmt.Println(len(elfTrios))
