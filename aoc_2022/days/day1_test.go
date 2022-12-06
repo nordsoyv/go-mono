@@ -1,9 +1,12 @@
 package days
 
-import "testing"
+import (
+	"aoc_2022/common"
+	"testing"
+)
 
 func TestDay1(t *testing.T) {
-	lines := readFileToLines("../res/day1test.txt")
+	lines := common.ReadFileToLines("../res/day1test.txt")
 	if len(lines) != 14 {
 		t.Fatalf("Wrong number of lines. Got %v, exptede 15", len(lines))
 	}

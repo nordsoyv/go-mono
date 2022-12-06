@@ -31,6 +31,14 @@ func main() {
 		days.Day02A()
 	case "02b":
 		days.Day02B()
+	case "03atest":
+		days.Day03TestA()
+	case "03btest":
+		days.Day03TestB()
+	case "03a":
+		days.Day03A()
+	case "03b":
+		days.Day03B()
 	}
 
 }
