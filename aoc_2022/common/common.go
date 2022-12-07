@@ -29,3 +29,29 @@ func StringToInt(stringNumber string) int {
 	}
 	return int(parsed)
 }
+
+func AddToFrontOfSlice(slice []string, toAdd []string) []string {
+	for _, add := range toAdd {
+		slice = append(slice, "")
+		copy(slice[1:], slice)
+		slice[0] = add
+	}
+	//slice = append(toAdd, slice...)
+	//copy(slice[1:], slice)
+	//slice[0] = toAdd
+	return slice
+}
+
+func AddStackToFrontOfSlice(slice []string, toAdd []string) []string {
+	slice = append(toAdd, slice...)
+	return slice
+}
+
+func RemoveFromFrontOfSlice(slice []string, amount int) (newSlice []string, removed []string) {
+	//removed := make([]string, 0)
+	for i := 0; i < amount; i++ {
+		removed = append(removed, slice[i])
+	}
+	newSlice = slice[amount:]
+	return
+}
