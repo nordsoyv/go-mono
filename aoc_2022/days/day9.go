@@ -14,6 +14,7 @@ func Day09A() {
 
 func Day09B() {
 	println("Day 09 B")
+	task9B("./res/day9.txt", 0)
 }
 
 func Day09TestA() {
@@ -23,6 +24,8 @@ func Day09TestA() {
 
 func Day09TestB() {
 	println("Day 09 test B")
+	task9B("./res/day9test.txt", 1)
+	task9B("./res/day9test2.txt", 36)
 }
 
 func task9A(path string, expected int) {
@@ -33,65 +36,45 @@ func task9A(path string, expected int) {
 		command := parseCommand(line)
 		commands = append(commands, command)
 	}
-	tail := Position{
-		x: 0,
-		y: 0,
+	result = moveRope(2, commands)
+	fmt.Println("Number of positions occupied by tail:", result, "Should be ", expected)
+}
+func task9B(path string, expected int) {
+	result := 0
+	lines := common.ReadFileToLines(path)
+	commands := make([]Command, 0)
+	for _, line := range lines {
+		command := parseCommand(line)
+		commands = append(commands, command)
 	}
-	head := Position{
-		x: 0,
-		y: 0,
-	}
-	positions := map[Position]bool{}
-	positions[tail] = true
+	result = moveRope(10, commands)
+	fmt.Println("Number of positions occupied by tail:", result, "Should be ", expected)
+}
 
+func moveRope(ropeLength int, commands []Command) int {
+	rope := make([]Position, ropeLength)
+	positions := map[Position]bool{}
+	positions[rope[len(rope)-1]] = true
 	for _, command := range commands {
 		dir := command.dir
 		for i := 0; i < command.amount; i++ {
 			switch dir {
 			case "R":
-				head.x++
+				rope[0].x++
 			case "L":
-				head.x--
+				rope[0].x--
 			case "D":
-				head.y--
+				rope[0].y--
 			case "U":
-				head.y++
+				rope[0].y++
 			}
-			//fmt.Println(head)
-			dist := getDistance(head, tail)
-			if dist > 1 {
-				if head.x == tail.x { // need to move vertical
-					if tail.y < head.y {
-						tail.y++
-					} else {
-						tail.y--
-					}
-				} else if head.y == tail.y { // need to move horizontal
-					if tail.x < head.x {
-						tail.x++
-					} else {
-						tail.x--
-					}
-				} else { // need to move diagonal
-					if tail.x < head.x {
-						tail.x++
-					} else {
-						tail.x--
-					}
-					if tail.y < head.y {
-						tail.y++
-					} else {
-						tail.y--
-					}
-
-				}
+			for i := 1; i < len(rope); i++ {
+				rope[i].MoveToward(rope[i-1])
 			}
-			positions[tail] = true
+			positions[rope[len(rope)-1]] = true
 		}
 	}
-
-	result = len(positions)
-	fmt.Println("Number of positions occupied by tail:", result, "Should be ", expected)
+	return len(positions)
 }
 
 type Position struct {
@@ -118,4 +101,36 @@ func parseCommand(command string) Command {
 
 func getDistance(a, b Position) int {
 	return int(math.Max(math.Abs(float64(a.x-b.x)), math.Abs(float64(a.y-b.y))))
+}
+
+func (p *Position) MoveToward(target Position) {
+	dist := getDistance(target, *p)
+	if dist < 2 {
+		return
+	}
+	if target.x == p.x { // need to move vertical
+		if p.y < target.y {
+			p.y++
+		} else {
+			p.y--
+		}
+	} else if target.y == p.y { // need to move horizontal
+		if p.x < target.x {
+			p.x++
+		} else {
+			p.x--
+		}
+	} else { // need to move diagonal
+		if p.x < target.x {
+			p.x++
+		} else {
+			p.x--
+		}
+		if p.y < target.y {
+			p.y++
+		} else {
+			p.y--
+		}
+
+	}
 }
