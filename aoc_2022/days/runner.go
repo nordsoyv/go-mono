@@ -68,6 +68,14 @@ func RunTask(taskName string) {
 		Day08A()
 	case "08b":
 		Day08B()
+	case "09atest":
+		Day09TestA()
+	case "09btest":
+		Day09TestB()
+	case "09a":
+		Day09A()
+	case "09b":
+		Day09B()
 	default:
 		fmt.Println("Unknown task given:", taskName)
 	}
