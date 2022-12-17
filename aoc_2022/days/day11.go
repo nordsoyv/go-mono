@@ -14,7 +14,7 @@ func Day11A() {
 
 func Day11B() {
 	println("Day 11 B")
-	task11b("./res/day11.txt", -1)
+	task11b("./res/day11.txt", 14952185856)
 }
 
 func Day11TestA() {
@@ -24,7 +24,7 @@ func Day11TestA() {
 
 func Day11TestB() {
 	println("Day 11 test B")
-	task11b("./res/day11.txt", -1)
+	task11b("./res/day11test.txt", 2713310158)
 }
 
 func task11a(path string, expected int) {
@@ -32,50 +32,7 @@ func task11a(path string, expected int) {
 	lines := common.ReadFileToLines(path)
 	monkeys := parseMonkeys(lines)
 	fmt.Println(monkeys)
-	for round := 0; round < 20; round++ {
-		fmt.Println("ROUND", round)
-		for i, monkey := range monkeys {
-			monkey := monkey
-			for _, item := range monkey.items {
-				monkeys[i].inspectAmount++
-				worry := item
-				if monkey.operation.operator == "+" {
-					if monkey.operation.num == "old" {
-						worry += item
-					} else {
-						value := common.StringToInt(monkey.operation.num)
-						worry += value
-					}
-				} else if monkey.operation.operator == "*" {
-					if monkey.operation.num == "old" {
-						worry *= item
-					} else {
-						value := common.StringToInt(monkey.operation.num)
-						worry *= value
-					}
-				} else {
-					panic(fmt.Sprintf("Unknown opeartor %v", monkey.operation.operator))
-				}
-				//fmt.Printf("Old Worry lvl %v, new worry lvl %v\n", item, worry)
-				worry /= 3
-				//fmt.Printf("Old Worry lvl %v, new worry lvl %v\n", item, worry)
-				if worry%monkey.test == 0 {
-					//fmt.Printf("Throw to monkey %v\n", monkey.trueTarget)
-					monkeys[monkey.trueTarget].addItem(worry)
-				} else {
-					//fmt.Printf("Throw to monkey %v\n", monkey.falseTarget)
-					monkeys[monkey.falseTarget].addItem(worry)
-				}
-			}
-			monkeys[i].items = make([]int, 0)
-		}
-
-		fmt.Println("The monkeys are holding these items:")
-		for i, monkey := range monkeys {
-			fmt.Printf("Monkey %v is holding: %v\n", i, monkey.items)
-		}
-		fmt.Println("ROUND DONE")
-	}
+	runRounds(20, 3, monkeys)
 	inspectAmounts := make([]int, 0)
 	for i, monkey := range monkeys {
 		fmt.Printf("Monkey %v has inspected: %v\n", i, monkey.inspectAmount)
@@ -89,9 +46,31 @@ func task11a(path string, expected int) {
 	fmt.Printf("Sum monkey business %v. Expected %v", result, expected)
 }
 
-func runRounds(numRounds, worryDivider int, monkeys []Monkey) {
+func task11b(path string, expected int) {
+	result := 0
+	lines := common.ReadFileToLines(path)
+	monkeys := parseMonkeys(lines)
+	commonDivider := int64(1)
+	for _, monkey := range monkeys {
+		commonDivider *= monkey.test
+	}
+	fmt.Println(monkeys, commonDivider)
+	runRounds(10000, commonDivider, monkeys)
+	inspectAmounts := make([]int, 0)
+	for i, monkey := range monkeys {
+		fmt.Printf("Monkey %v has inspected: %v\n", i, monkey.inspectAmount)
+		inspectAmounts = append(inspectAmounts, monkey.inspectAmount)
+	}
+	sort.Ints(inspectAmounts)
+	fmt.Println(inspectAmounts)
+	val1 := inspectAmounts[len(inspectAmounts)-1]
+	val2 := inspectAmounts[len(inspectAmounts)-2]
+	result = val1 * val2
+	fmt.Printf("Sum monkey business %v. Expected %v", result, expected)
+}
+
+func runRounds(numRounds int, worryDivider int64, monkeys []Monkey) {
 	for round := 0; round < numRounds; round++ {
-		fmt.Println("ROUND", round)
 		for i, monkey := range monkeys {
 			monkey := monkey
 			for _, item := range monkey.items {
@@ -101,44 +80,41 @@ func runRounds(numRounds, worryDivider int, monkeys []Monkey) {
 					if monkey.operation.num == "old" {
 						worry += item
 					} else {
-						value := common.StringToInt(monkey.operation.num)
+						value := common.StringToInt64(monkey.operation.num)
 						worry += value
 					}
 				} else if monkey.operation.operator == "*" {
 					if monkey.operation.num == "old" {
 						worry *= item
 					} else {
-						value := common.StringToInt(monkey.operation.num)
+						value := common.StringToInt64(monkey.operation.num)
 						worry *= value
 					}
 				} else {
 					panic(fmt.Sprintf("Unknown opeartor %v", monkey.operation.operator))
 				}
-				//fmt.Printf("Old Worry lvl %v, new worry lvl %v\n", item, worry)
-				worry /= worryDivider
-				//fmt.Printf("Old Worry lvl %v, new worry lvl %v\n", item, worry)
+				if worryDivider == 3 {
+					worry /= worryDivider
+				} else {
+					worry %= worryDivider
+				}
 				if worry%monkey.test == 0 {
-					//fmt.Printf("Throw to monkey %v\n", monkey.trueTarget)
 					monkeys[monkey.trueTarget].addItem(worry)
 				} else {
-					//fmt.Printf("Throw to monkey %v\n", monkey.falseTarget)
 					monkeys[monkey.falseTarget].addItem(worry)
 				}
 			}
-			monkeys[i].items = make([]int, 0)
+			monkeys[i].items = make([]int64, 0)
 		}
-
-		fmt.Println("The monkeys are holding these items:")
-		for i, monkey := range monkeys {
-			fmt.Printf("Monkey %v is holding: %v\n", i, monkey.items)
-		}
-		fmt.Println("ROUND DONE")
 	}
 }
 
-func task11b(path string, expected int) {
-	result := 0
-	fmt.Printf("Sum monkey business %v. Expected %v", result, expected)
+func printInspectAmount(round int, monkeys []Monkey) {
+	fmt.Println("Holding after round", round)
+	for i, monkey := range monkeys {
+		fmt.Printf("  Monkey %v has inspected: %v\n", i, monkey.inspectAmount)
+	}
+
 }
 
 func parseMonkeys(lines []string) []Monkey {
@@ -160,7 +136,7 @@ func parseMonkeys(lines []string) []Monkey {
 			itemStr := line[18:]
 			items := strings.Split(itemStr, ", ")
 			for _, item := range items {
-				monkey.addItem(common.StringToInt(item))
+				monkey.addItem(common.StringToInt64(item))
 			}
 		}
 		if strings.HasPrefix(line, "  Operation") {
@@ -173,7 +149,7 @@ func parseMonkeys(lines []string) []Monkey {
 		}
 		if strings.HasPrefix(line, "  Test") {
 			test := line[21:]
-			monkey.test = common.StringToInt(test)
+			monkey.test = common.StringToInt64(test)
 		}
 		if strings.HasPrefix(line, "    If true") {
 			ifTrue := line[29:]
@@ -190,8 +166,8 @@ func parseMonkeys(lines []string) []Monkey {
 
 type Monkey struct {
 	id            int
-	items         []int
-	test          int
+	items         []int64
+	test          int64
 	operation     operation
 	trueTarget    int
 	falseTarget   int
@@ -206,7 +182,7 @@ type operation struct {
 func createMonkey() Monkey {
 	return Monkey{
 		id:    0,
-		items: make([]int, 0),
+		items: make([]int64, 0),
 		test:  0,
 		operation: operation{
 			operator: "",
@@ -218,7 +194,7 @@ func createMonkey() Monkey {
 	}
 }
 
-func (m *Monkey) addItem(item int) {
+func (m *Monkey) addItem(item int64) {
 	m.items = append(m.items, item)
 }
 

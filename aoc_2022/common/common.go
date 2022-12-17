@@ -29,6 +29,13 @@ func StringToInt(stringNumber string) int {
 	}
 	return int(parsed)
 }
+func StringToInt64(stringNumber string) int64 {
+	parsed, err := strconv.ParseInt(stringNumber, 10, 64)
+	if err != nil {
+		panic(err)
+	}
+	return parsed
+}
 
 func AddToFrontOfSlice(slice []string, toAdd []string) []string {
 	for _, add := range toAdd {
