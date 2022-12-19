@@ -123,7 +123,7 @@ func (m *Machine) EndCycle() {
 }
 
 func (m Machine) GetCycleValue(cycle int) int {
-	offset := -1
+	offset := -2
 	if (cycle + offset) < 0 {
 		return 0
 	}
@@ -137,7 +137,7 @@ func (m Machine) DrawCrt() {
 			fmt.Println(crtLine)
 			crtLine = ""
 		}
-		logValue := m.GetCycleValue(i)
+		logValue := m.GetCycleValue(i + 1)
 		if pixelHit(i%40, logValue) {
 			crtLine += "#"
 		} else {
