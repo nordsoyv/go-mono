@@ -27,27 +27,32 @@ func Day12TestB() {
 
 func task12a(path string, expected int) {
 	lines := common.ReadFileToLines(path)
-	m := makeMap()
-	m.readMap(lines)
+	m := makeMap(lines)
+	fmt.Println(m)
 }
 func task12b(path string, expected int) {
 
 }
 
 type Map struct {
-	startX, startY int
-	endX, endY     int
-	data           [][]int32
+	start coord
+	end   coord
+	data  [][]int32
 }
 
-func makeMap() Map {
+func makeMap(lines []string) Map {
 	m := Map{
-		startX: -1,
-		startY: -1,
-		endX:   -1,
-		endY:   -1,
-		data:   make([][]int32, 0),
+		start: coord{
+			x: -1,
+			y: -1,
+		},
+		end: coord{
+			x: -1,
+			y: -1,
+		},
+		data: make([][]int32, 0),
 	}
+	m.readMap(lines)
 	return m
 }
 
@@ -57,14 +62,14 @@ func (m *Map) readMap(input []string) {
 		for x, tile := range line {
 			if tile == 83 {
 				row = append(row, 0)
-				m.startX = x
-				m.startY = y
+				m.start.x = x
+				m.start.y = y
 				continue
 			}
 			if tile == 69 {
 				row = append(row, 123-97)
-				m.endX = x
-				m.endY = y
+				m.end.x = x
+				m.end.y = y
 				continue
 			}
 			row = append(row, tile-97)
@@ -74,8 +79,8 @@ func (m *Map) readMap(input []string) {
 }
 
 func (m Map) String() string {
-	res := fmt.Sprintf("Start is (%3d,%3d)\n", m.startX, m.startY)
-	res += fmt.Sprintf("End is   (%3d,%3d)\n", m.endX, m.endY)
+	res := fmt.Sprintf("Start is (%3d,%3d)\n", m.start.x, m.start.y)
+	res += fmt.Sprintf("End is   (%3d,%3d)\n", m.end.x, m.end.y)
 
 	for _, row := range m.data {
 		for _, tile := range row {
